@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Peta Desa Watubula</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-image: url('gambar/BG.JPG');
+      background-size: cover;
+      background-position: center;
+      color: white;
+      min-height: 100vh;
+      padding-bottom: 80px;
+      box-sizing: border-box;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: -1;
+    }
+    .navbar {
+      display: flex;
+      align-items: center;
+      background: #7CC000;
+      color: #fff;
+      padding: 10px 20px;
+      position: relative;
+      z-index: 1001;
+      height: 60px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .hamburger {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      margin-right: 16px;
+    }
+    .hamburger span {
+      width: 26px;
+      height: 4px;
+      background: #fff;
+      margin: 3px 0;
+      border-radius: 2px;
+      transition: 0.3s;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo img {
+      height: 50px;
+    }
+    .logo h1 {
+      font-size: 20px;
+      margin: 0;
+      color: #fff;
+    }
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 260px;
+      height: 100%;
+      background: #111;
+      color: #fff;
+      padding-top: 60px;
+      transform: translateX(-100%);
+      transition: transform 0.3s;
+      z-index: 1002;
+      box-shadow: 2px 0 12px rgba(0,0,0,0.08);
+    }
+    .sidebar.active {
+      transform: translateX(0);
+    }
+    .sidebar .close-btn {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      font-size: 30px;
+      cursor: pointer;
+      color: #fff;
+      background: none;
+      border: none;
+    }
+    .sidebar ul {
+      list-style: none;
+      padding: 0 30px;
+      margin: 0;
+    }
+    .sidebar ul li {
+      margin: 30px 0;
+    }
+    .sidebar ul li a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 18px;
+      display: block;
+      transition: color 0.2s;
+    }
+    .sidebar ul li a:hover {
+      color: #7CC000;
+    }
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.35);
+      z-index: 1000;
+    }
+    .sidebar-overlay.active {
+      display: block;
+    }
+    @media (max-width: 700px) {
+      .sidebar { width: 80vw; min-width: 180px; }
+      .logo h1 { font-size: 16px; }
+    }
+    .container {
+      max-width: 500px;
+      margin: 70px auto 0 auto;
+      padding: 24px 5vw 16px 5vw;
+      background-color: rgba(0, 0, 0, 0.74);
+      border-radius: 11px;
+      box-sizing: border-box;
+      text-align: center;
+    }
+    h1 {
+      font-size: 22px;
+      margin-bottom: 18px;
+      color: white;
+      letter-spacing: 0.5px;
+    }
+    iframe {
+      width: 100%;
+      height: 250px;
+      border: none;
+      border-radius: 10px;
+      margin-bottom: 18px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    }
+    .back-link {
+      display: inline-block;
+      margin-top: 18px;
+      color: white;
+      font-weight: bold;
+      text-decoration: none;
+      font-size: 15px;
+      border-radius: 5px;
+      padding: 6px 16px;
+      background: rgba(124,192,0,0.12);
+      transition: background 0.2s;
+    }
+    .back-link:hover {
+      background: rgba(124,192,0,0.3);
+      text-decoration: underline;
+    }
+    .footer-hijau {
+      width: 100%;
+      background: #275a1c;
+      color: #fff;
+      font-size: 1.1em;
+      text-align: left;
+      padding: 10px 20px;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      position: fixed;
+      left: 0; right: 0; bottom: 0;
+      z-index: 10;
+      box-sizing: border-box;
+      letter-spacing: 0.2px;
+    }
+    @media (max-width: 700px) {
+      .footer-hijau { font-size: 1em; padding: 8px 8vw; }
+      .container { margin: 32px 2vw 0 2vw; padding: 12px 2vw 8px 2vw; }
+      h1 { font-size: 16px; }
+      iframe { height: 140px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <div class="hamburger" id="hamburger-menu" aria-label="Buka menu navigasi" tabindex="0">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+    <div class="logo">
+      <img src="gambar/logo.png" alt="Logo Desa Watubula" />
+      <h1>Desa Watubula</h1>
+      <p>Kec. Sigi Kota, Kab. Sigi, Prov. Sulawesi Tengah</p>
+    </div>
+  </div>
+  <!-- Sidebar Menu -->
+  <div class="sidebar" id="sidebar-menu">
+    <button class="close-btn" id="close-sidebar" aria-label="Tutup menu">&times;</button>
+    <ul>
+      <li><a href="index.html">Beranda</a></li>
+      <li><a href="profil.html">Profil Desa</a></li>
+      <li><a href="aparat.html">Aparat</a></li>
+      <li><a href="peta.html">Peta</a></li>
+      <li><a href="stat.html">Infografis</a></li>
+    </ul>
+  </div>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+  <main>
+    <div class="container">
+      <h1>Peta Desa Watubula</h1>
+      <iframe 
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126641.93539867437!2d120.4338325387523!3d-1.2536591834280978!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dab70c305ecf0f9%3A0xb548b340d0e76c7e!2sWatubula%2C%20Dolo%2C%20Sigi%2C%20Sulawesi%20Tengah!5e0!3m2!1sid!2sid!4v1718800000000!5m2!1sid!2sid" 
+        allowfullscreen="" 
+        loading="lazy">
+      </iframe>
+      <a href="Utama.html" class="back-link">← Kembali ke Beranda</a>
+    </div>
+  </main>
+  <footer class="footer-hijau">
+    &copy; 2025 Pemerintah Desa Watubula | Sumber Data: BPS & Desa Watubula
+  </footer>
+  <script>
+    // Sidebar toggle logic
+    const hamburger = document.getElementById('hamburger-menu');
+    const sidebar = document.getElementById('sidebar-menu');
+    const closeBtn = document.getElementById('close-sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+
+    function openSidebar() {
+      sidebar.classList.add('active');
+      overlay.classList.add('active');
+    }
+    function closeSidebar() {
+      sidebar.classList.remove('active');
+      overlay.classList.remove('active');
+    }
+    hamburger.addEventListener('click', openSidebar);
+    closeBtn.addEventListener('click', closeSidebar);
+    overlay.addEventListener('click', closeSidebar);
+
+    // Optional: close sidebar on ESC key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === "Escape") closeSidebar();
+    });
+  </script>
+</body>
+</html>

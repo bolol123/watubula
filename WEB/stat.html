@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Statistik Desa Watubula</title>
+  <link rel="icon" href="gambar/favicon.ico" type="image/x-icon">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-image: url('gambar/BG.JPG');
+      background-size: cover;
+      background-position: center;
+      color: white;
+      padding-bottom: 80px;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: -1;
+    }
+    .navbar {
+      display: flex;
+      align-items: center;
+      background: #7CC000;
+      color: #fff;
+      padding: 10px 20px;
+      position: relative;
+      z-index: 1001;
+      height: 60px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .hamburger {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      margin-right: 16px;
+    }
+    .hamburger span {
+      width: 26px;
+      height: 4px;
+      background: #fff;
+      margin: 3px 0;
+      border-radius: 2px;
+      transition: 0.3s;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo img {
+      height: 50px;
+      width: auto;
+      display: block;
+    }
+    .logo h1 {
+      font-size: 20px;
+      margin: 0;
+      color: #fff;
+      font-weight: bold;
+      line-height: 1.2;
+      text-align: left;
+      white-space: nowrap;
+    }
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 260px;
+      height: 100%;
+      background: #111;
+      color: #fff;
+      padding-top: 60px;
+      transform: translateX(-100%);
+      transition: transform 0.3s;
+      z-index: 1002;
+      box-shadow: 2px 0 12px rgba(0,0,0,0.08);
+    }
+    .sidebar.active {
+      transform: translateX(0);
+    }
+    .sidebar .close-btn {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      font-size: 30px;
+      cursor: pointer;
+      color: #fff;
+      background: none;
+      border: none;
+    }
+    .sidebar ul {
+      list-style: none;
+      padding: 0 30px;
+      margin: 0;
+    }
+    .sidebar ul li {
+      margin: 30px 0;
+    }
+    .sidebar ul li a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 18px;
+      display: block;
+      transition: color 0.2s;
+    }
+    .sidebar ul li a:hover {
+      color: #7CC000;
+    }
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.35);
+      z-index: 1000;
+    }
+    .sidebar-overlay.active {
+      display: block;
+    }
+    @media (max-width: 700px) {
+      .sidebar { width: 80vw; min-width: 180px; }
+      .logo h1 { font-size: 16px; }
+      .logo img { height: 28px; }
+    }
+    .footer-hijau {
+      width: 100%;
+      background: #275a1c;
+      color: #fff;
+      font-size: 1.25em;
+      text-align: left;
+      padding: 8px 24px;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      position: fixed;
+      left: 0; right: 0; bottom: 0;
+      z-index: 10;
+      box-sizing: border-box;
+      letter-spacing: 0.2px;
+    }
+    header {
+      text-align: center;
+      padding: 36px 10px 14px;
+    }
+    header h1 {
+      margin: 0 0 6px;
+      font-size: 2em;
+      color: #fff;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    }
+    header p {
+      margin: 0 0 16px;
+      color: #e0e0e0;
+      font-size: 1.1em;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.18);
+    }
+    main {
+      min-height: 80vh;
+    }
+    .stat-cards {
+      display: flex;
+      gap: 18px;
+      justify-content: center;
+      margin-bottom: 36px;
+      flex-wrap: wrap;
+    }
+    .stat-card {
+      background: rgba(255,255,255,0.92);
+      color: #2a4a8a;
+      padding: 18px 32px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+      min-width: 130px;
+      text-align: center;
+    }
+    .stat-card h3 {
+      margin: 0 0 8px;
+      font-size: 1em;
+      font-weight: 500;
+      color: #444;
+    }
+    .stat-card p {
+      margin: 0;
+      font-size: 1.7em;
+      font-weight: bold;
+      color: #2a4a8a;
+    }
+    .charts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 28px;
+      max-width: 1200px;
+      margin: 0 auto 40px;
+      padding: 0 16px;
+    }
+    .chart-item {
+      background: rgba(255,255,255,0.95);
+      padding: 20px 12px 16px 12px;
+      border-radius: 14px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.10);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+    .chart-item h2 {
+      color: #2a4a8a;
+      font-size: 1.1em;
+      margin-bottom: 8px;
+      margin-top: 0;
+      font-weight: 600;
+      text-shadow: 0 1px 3px rgba(255,255,255,0.18);
+    }
+    .chart-desc, .chart-source {
+      color: #444;
+      font-size: 0.98em;
+      margin: 6px 0 2px 0;
+      text-align: center;
+    }
+    .chart-source {
+      font-size: 0.9em;
+      color: #888;
+    }
+    canvas {
+      max-width: 100%;
+      height: 220px !important;
+    }
+    .back-link {
+      display: inline-block;
+      margin: 30px auto 0;
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 15px;
+      padding: 8px 18px;
+      border-radius: 6px;
+      background: rgba(42,74,138,0.7);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.10);
+      transition: background 0.2s;
+    }
+    .back-link:hover { background: rgba(42,74,138,0.95); }
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <div class="hamburger" id="hamburger-menu" aria-label="Buka menu navigasi" tabindex="0">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+    <div class="logo">
+      <img src="gambar/logo.png" alt="Logo Desa Watubula" />
+      <h1>Desa Watubula</h1>
+      <p>Kec. Sigi Kota, Kab. Sigi, Prov. Sulawesi Tengah</p>
+    </div>
+  </div>
+  <!-- Sidebar Menu -->
+  <div class="sidebar" id="sidebar-menu">
+    <button class="close-btn" id="close-sidebar" aria-label="Tutup menu">&times;</button>
+    <ul>
+      <li><a href="index.html">Beranda</a></li>
+      <li><a href="profil.html">Profil Desa</a></li>
+      <li><a href="aparat.html">Aparat</a></li>
+      <li><a href="peta.html">Peta</a></li>
+      <li><a href="stat.html">Infografis</a></li>
+    </ul>
+  </div>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+  <header>
+    <h1>Statistik Desa Watubula</h1>
+    <p>Data Kependudukan & Infrastruktur | Data 2024</p>
+  </header>
+  <main>
+    <section class="stat-cards">
+      <div class="stat-card">
+        <h3>Penduduk</h3>
+        <p>1.123</p>
+      </div>
+      <div class="stat-card">
+        <h3>Kepala Keluarga</h3>
+        <p>473</p>
+      </div>
+      <div class="stat-card">
+        <h3>Sekolah</h3>
+        <p>4</p>
+      </div>
+    </section>
+    <section class="charts-grid">
+      <div class="chart-item">
+        <h2>Jenis Kelamin</h2>
+        <div class="chart-desc">Distribusi penduduk berdasarkan jenis kelamin.</div>
+        <canvas id="genderChart"></canvas>
+        <div class="chart-source">Sumber: Data Desa Watubula</div>
+      </div>
+      <div class="chart-item">
+        <h2>Tingkat Pendidikan</h2>
+        <div class="chart-desc">Sebagian besar penduduk tamat SD dan SLTP.</div>
+        <canvas id="educationChart"></canvas>
+        <div class="chart-source">Sumber: Data Desa Watubula</div>
+      </div>
+      <div class="chart-item">
+        <h2>Mata Pencaharian</h2>
+        <div class="chart-desc">Mayoritas penduduk bekerja sebagai petani dan buruh tani.</div>
+        <canvas id="occupationChart"></canvas>
+        <div class="chart-source">Sumber: RPJ Desa Watubula 2024, Data Desa Watubula</div>
+      </div>
+      <div class="chart-item">
+        <h2>Agama</h2>
+        <div class="chart-desc">Mayoritas penduduk beragama Kristen (Balai Keselamatan).</div>
+        <canvas id="religionChart"></canvas>
+        <div class="chart-source">Sumber: Data Desa Watubula</div>
+      </div>
+      <div class="chart-item">
+        <h2>Jumlah Sekolah</h2>
+        <div class="chart-desc">Terdapat 2 SD dan 1 PAUD di desa.</div>
+        <canvas id="schoolChart"></canvas>
+        <div class="chart-source">Sumber: Data Desa Watubula</div>
+      </div>
+      <div class="chart-item">
+        <h2>Tempat Ibadah</h2>
+        <div class="chart-desc">Terdapat 5 gereja, tidak ada masjid.</div>
+        <canvas id="ibadahChart"></canvas>
+        <div class="chart-source">Sumber: Data Desa Watubula</div>
+      </div>
+      <div class="chart-item">
+        <h2>Fasilitas Umum</h2>
+        <div class="chart-desc">Terdapat polindes, sekolah, dan poskamling.</div>
+        <canvas id="fasilitasChart"></canvas>
+        <div class="chart-source">Sumber: Data Desa Watubula</div>
+      </div>
+    </section>
+    <a href="Utama.html" class="back-link">← Kembali ke Beranda</a>
+  </main>
+  <footer class="footer-hijau">
+    &copy; 2025 Pemerintah Desa Watubula | Sumber Data: BPS & Desa Watubula
+  </footer>
+  <script>
+    // Sidebar toggle logic
+    const hamburger = document.getElementById('hamburger-menu');
+    const sidebar = document.getElementById('sidebar-menu');
+    const closeBtn = document.getElementById('close-sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+    function openSidebar() {
+      sidebar.classList.add('active');
+      overlay.classList.add('active');
+    }
+    function closeSidebar() {
+      sidebar.classList.remove('active');
+      overlay.classList.remove('active');
+    }
+    hamburger.addEventListener('click', openSidebar);
+    closeBtn.addEventListener('click', closeSidebar);
+    overlay.addEventListener('click', closeSidebar);
+    document.addEventListener('keydown', function(e) {
+      if (e.key === "Escape") closeSidebar();
+    });
+
+    // Chart.js
+    Chart.register(ChartDataLabels);
+
+    // Tooltip: label, value, persentase
+    function percentTooltip(context) {
+      const chart = context.chart;
+      const dataArr = context.dataset.data;
+      let total = 0;
+      if (chart.config.type === 'pie' || chart.config.type === 'doughnut') {
+        total = dataArr.reduce((a, b) => a + b, 0);
+      } else if (chart.data.datasets[0].data) {
+        total = chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+      }
+      const label = context.label || chart.data.labels[context.dataIndex];
+      const value = context.parsed.y !== undefined ? context.parsed.y : context.parsed;
+      const percent = total ? ((value / total) * 100).toFixed(1) : 0;
+      return `${label}: ${value} (${percent}%)`;
+    }
+
+    const commonOptions = {
+      plugins: {
+        legend: { display: false },
+        datalabels: {
+          color: '#222',
+          anchor: 'end',
+          align: 'top',
+          font: { weight: 'bold' }
+        },
+        tooltip: {
+          callbacks: { label: percentTooltip }
+        }
+      },
+      animation: {
+        duration: 1200,
+        easing: 'easeOutBounce'
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: { precision: 0 }
+        }
+      }
+    };
+    // Pie chart Jenis Kelamin
+    new Chart(document.getElementById('genderChart').getContext('2d'), {
+      type: 'pie',
+      data: {
+        labels: ['Laki-laki', 'Perempuan'],
+        datasets: [{ data: [697, 696], backgroundColor: ['#4CAF50', '#FFC107'] }]
+      },
+      options: {
+        ...commonOptions,
+        plugins: { ...commonOptions.plugins, legend: { display: true } }
+      }
+    });
+    // Bar chart Pendidikan
+    new Chart(document.getElementById('educationChart').getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels: ['Tidak Tamat SD', 'SD', 'SLTP', 'SLTA', 'Diploma/Sarjana'],
+        datasets: [{ data: [15, 576, 523, 249, 30], backgroundColor: '#42A5F5' }]
+      },
+      options: {
+        ...commonOptions,
+        plugins: {
+          ...commonOptions.plugins,
+          tooltip: {
+            callbacks: {
+              label: percentTooltip
+            }
+          }
+        }
+      }
+    });
+    // Bar chart Pekerjaan
+    new Chart(document.getElementById('occupationChart').getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels: ['Buruh Tani', 'Petani', 'Peternak', 'Pedagang', 'Tukang Kayu', 'Tukang Batu', 'Penjahit', 'PNS', 'Pensiunan', 'TNI/Polri', 'Perangkat Desa', 'Pengrajin', 'Industri Kecil', 'Buruh Industri', 'Lain-lain'],
+        datasets: [{ data: [50, 250, 15, 25, 10, 5, 2, 23, 1, 2, 10, 0, 0, 0, 0], backgroundColor: '#FF7043' }]
+      },
+      options: {
+        ...commonOptions,
+        plugins: {
+          ...commonOptions.plugins,
+          tooltip: { callbacks: { label: percentTooltip } }
+        }
+      }
+    });
+    // Pie chart Agama
+    new Chart(document.getElementById('religionChart').getContext('2d'), {
+      type: 'pie',
+      data: {
+        labels: ['Kristen (Balai Keselamatan)', 'Protestan', 'Islam'],
+        datasets: [{
+          data: [1253, 60, 80],
+          backgroundColor: ['#66BB6A', '#42A5F5', '#AB47BC']
+        }]
+      },
+      options: {
+        ...commonOptions,
+        plugins: { ...commonOptions.plugins, legend: { display: true } }
+      }
+    });
+    // Bar chart Sekolah
+    new Chart(document.getElementById('schoolChart').getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels: ['SLTA', 'SLTP', 'SD', 'MI', 'PAUD'],
+        datasets: [{ data: [0, 0, 2, 0, 2], backgroundColor: '#FFA726' }]
+      },
+      options: {
+        ...commonOptions,
+        plugins: { ...commonOptions.plugins, tooltip: { callbacks: { label: percentTooltip } } }
+      }
+    });
+    // Bar chart Tempat Ibadah
+    new Chart(document.getElementById('ibadahChart').getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels: ['Masjid', 'Gereja'],
+        datasets: [{ data: [0, 5], backgroundColor: '#26A69A' }]
+      },
+      options: {
+        ...commonOptions,
+        plugins: { ...commonOptions.plugins, tooltip: { callbacks: { label: percentTooltip } } }
+      }
+    });
+    // Bar chart Fasilitas Umum
+    new Chart(document.getElementById('fasilitasChart').getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels: ['Polindes', 'Sekolah', 'Poskamling'],
+        datasets: [{ data: [1, 4, 3], backgroundColor: '#EC407A' }]
+      },
+      options: {
+        ...commonOptions,
+        plugins: { ...commonOptions.plugins, tooltip: { callbacks: { label: percentTooltip } } }
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Desa Watubula</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-image: url('gambar/BG.JPG');
+      background-size: cover;
+      background-position: center;
+      color: white;
+      text-align: center;
+      padding-bottom: 100px;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background-color: rgba(0,0,0,0.5);
+      z-index: -1;
+    }
+    .navbar {
+      display: flex;
+      align-items: center;
+      background: #7CC000;
+      color: #fff;
+      padding: 10px 20px;
+      position: relative;
+      z-index: 1001;
+      height: 60px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .hamburger {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      margin-right: 16px;
+    }
+    .hamburger span {
+      width: 26px;
+      height: 4px;
+      background: #fff;
+      margin: 3px 0;
+      border-radius: 2px;
+      transition: 0.3s;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo img {
+      height: 50px;
+    }
+    .logo h1 {
+      font-size: 20px;
+      margin: 0;
+      color: #fff;
+    }
+    /* Sidebar styles */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 260px;
+      height: 100%;
+      background: #111;
+      color: #fff;
+      padding-top: 60px;
+      transform: translateX(-100%);
+      transition: transform 0.3s;
+      z-index: 1002;
+      box-shadow: 2px 0 12px rgba(0,0,0,0.08);
+    }
+    .sidebar.active {
+      transform: translateX(0);
+    }
+    .sidebar .close-btn {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      font-size: 30px;
+      cursor: pointer;
+      color: #fff;
+      background: none;
+      border: none;
+    }
+    .sidebar ul {
+      list-style: none;
+      padding: 0 30px;
+      margin: 0;
+    }
+    .sidebar ul li {
+      margin: 30px 0;
+    }
+    .sidebar ul li a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 18px;
+      display: block;
+      transition: color 0.2s;
+    }
+    .sidebar ul li a:hover {
+      color: #7CC000;
+    }
+    /* Overlay background when sidebar open */
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.35);
+      z-index: 1000;
+    }
+    .sidebar-overlay.active {
+      display: block;
+    }
+    @media (max-width: 600px) {
+      .sidebar { width: 80vw; min-width: 180px; }
+      .logo h1 { font-size: 16px; }
+    }
+    .footer-hijau {
+      width: 100%;
+      background: #275a1c;
+      color: #fff;
+      font-size: 1.25em;
+      text-align: left;
+      padding: 8px 24px;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      position: fixed;
+      left: 0; right: 0; bottom: 0;
+      z-index: 10;
+      box-sizing: border-box;
+      letter-spacing: 0.2px;
+    }
+    .welcome-text {
+      padding-top: 80px;
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+    h1 {
+      font-size: 40px;
+      margin-bottom: 0;
+    }
+    h2 {
+      font-size: 22px;
+      font-weight: normal;
+      margin-top: 10px;
+    }
+    .email-buttons {
+      margin-top: 30px;
+    }
+    .email-buttons h3 {
+      font-size: 14px;
+      margin-bottom: 15px;
+    }
+    .email-buttons a {
+      text-decoration: none;
+      margin: 0 5px;
+      display: inline-block;
+    }
+    .email-buttons button {
+      margin: 5px 5px;
+      padding: 10px 18px;
+      background: transparent;
+      border: 2px solid white;
+      color: white;
+      cursor: pointer;
+      font-weight: normal;
+      border-radius: 5px;
+      font-size: 16px;
+      transition: background 0.2s, color 0.2s;
+      width: 140px;
+      max-width: 90vw;
+    }
+    .email-buttons button:hover {
+      background-color: white;
+      color: #333;
+    }
+    .icons {
+      margin-top: 40px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+    .icon-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: inherit;
+      max-width: 100px;
+      width: 100px;
+    }
+    .icon-circle {
+      background-color: #7CC000;
+      padding: 10px;
+      border-radius: 12px;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .icon-circle img {
+      max-width: 100%;
+      max-height: 100%;
+    }
+    .icon-label {
+      margin-top: 8px;
+      font-weight: bold;
+      font-size: 13px;
+      color: white;
+      text-align: center;
+      word-break: break-word;
+    }
+    .icon-box:hover .icon-circle {
+      background-color: #5da000;
+    }
+    @media screen and (max-width: 800px) {
+      h1 { font-size: 30px; }
+      .icon-box, .icon-circle { width: 80px; max-width: 80px; }
+      .icon-circle { height: 50px; }
+    }
+    @media screen and (max-width: 600px) {
+      .welcome-text { padding-top: 60px; }
+      h1 { font-size: 22px; }
+      h2 { font-size: 16px; }
+      .email-buttons button {
+        width: 90vw;
+        padding: 10px 0;
+        font-size: 15px;
+        margin: 8px auto;
+        display: block;
+      }
+      .icons { gap: 14px; }
+      .icon-box, .icon-circle { width: 60px; max-width: 60px; }
+      .icon-circle { height: 40px; padding: 6px; border-radius: 8px; }
+      .icon-label { font-size: 11px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <div class="hamburger" id="hamburger-menu" aria-label="Buka menu navigasi" tabindex="0">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+    <div class="logo">
+      <img src="gambar/logo.png" alt="Logo Desa" />
+      <h1>Desa Watubula</h1>
+      <p>Kec. Sigi Kota, Kab. Sigi, Prov. Sulawesi Tengah</p>
+    </div>
+  </div>
+  <!-- Sidebar Menu -->
+  <div class="sidebar" id="sidebar-menu">
+    <button class="close-btn" id="close-sidebar" aria-label="Tutup menu">&times;</button>
+    <ul>
+      <li><a href="index.html">Beranda</a></li>
+      <li><a href="profil.html">Profil Desa</a></li>
+      <li><a href="aparat.html">Aparat</a></li>
+      <li><a href="peta.html">Peta</a></li>
+      <li><a href="stat.html">Infografis</a></li>
+    </ul>
+  </div>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <div class="welcome-text">
+    <h1>Selamat Datang Di <br> Desa Watubula</h1>
+    <h2>Motto Desa</h2>
+    <div class="email-buttons">
+      <h3>Kontak Person</h3>
+      <a href="https://wa.me/6281341108185" target="_blank"><button>WHATSAPP</button></a>
+    </div>
+  </div>
+
+  <div class="icons">
+    <a href="Profil.html" class="icon-box">
+      <div class="icon-circle">
+        <img src="gambar/PROFILE.png" alt="Profil Desa" />
+      </div>
+      <div class="icon-label">Profil Desa</div>
+    </a>
+    <a href="Aparat.html" class="icon-box">
+      <div class="icon-circle">
+        <img src="gambar/APARAT.png" alt="Aparat" />
+      </div>
+      <div class="icon-label">Aparat</div>
+    </a>
+    <a href="Peta.html" class="icon-box">
+      <div class="icon-circle">
+        <img src="gambar/MAPS.png" alt="Peta" />
+      </div>
+      <div class="icon-label">Peta</div>
+    </a>
+    <a href="Stat.html" class="icon-box">
+      <div class="icon-circle">
+        <img src="gambar/STAT.png" alt="Statistik" />
+      </div>
+      <div class="icon-label">Infografis</div>
+    </a>
+  </div>
+  <script>
+    // Sidebar toggle logic
+    const hamburger = document.getElementById('hamburger-menu');
+    const sidebar = document.getElementById('sidebar-menu');
+    const closeBtn = document.getElementById('close-sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+
+    function openSidebar() {
+      sidebar.classList.add('active');
+      overlay.classList.add('active');
+    }
+    function closeSidebar() {
+      sidebar.classList.remove('active');
+      overlay.classList.remove('active');
+    }
+    hamburger.addEventListener('click', openSidebar);
+    closeBtn.addEventListener('click', closeSidebar);
+    overlay.addEventListener('click', closeSidebar);
+
+    // Optional: close sidebar on ESC key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === "Escape") closeSidebar();
+    });
+  </script>
+</body>
+</html>

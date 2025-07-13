@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aparat Desa Watubula</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-image: url('gambar/BG.JPG');
+      background-size: cover;
+      background-position: center;
+      color: white;
+      text-align: center;
+      padding-bottom: 100px;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: -1;
+    }
+    .navbar {
+      display: flex;
+      align-items: center;
+      background: #7CC000;
+      color: #fff;
+      padding: 10px 20px;
+      position: relative;
+      z-index: 1001;
+      height: 60px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .hamburger {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      margin-right: 16px;
+    }
+    .hamburger span {
+      width: 26px;
+      height: 4px;
+      background: #fff;
+      margin: 3px 0;
+      border-radius: 2px;
+      transition: 0.3s;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo img {
+      height: 50px;
+    }
+    .logo h1 {
+      font-size: 20px;
+      margin: 0;
+      color: #fff;
+    }
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 260px;
+      height: 100%;
+      background: #111;
+      color: #fff;
+      padding-top: 60px;
+      transform: translateX(-100%);
+      transition: transform 0.3s;
+      z-index: 1002;
+      box-shadow: 2px 0 12px rgba(0,0,0,0.08);
+    }
+    .sidebar.active {
+      transform: translateX(0);
+    }
+    .sidebar .close-btn {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      font-size: 30px;
+      cursor: pointer;
+      color: #fff;
+      background: none;
+      border: none;
+    }
+    .sidebar ul {
+      list-style: none;
+      padding: 0 30px;
+      margin: 0;
+    }
+    .sidebar ul li {
+      margin: 30px 0;
+    }
+    .sidebar ul li a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 18px;
+      display: block;
+      transition: color 0.2s;
+    }
+    .sidebar ul li a:hover {
+      color: #7CC000;
+    }
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.35);
+      z-index: 1000;
+    }
+    .sidebar-overlay.active {
+      display: block;
+    }
+    @media (max-width: 600px) {
+      .sidebar { width: 80vw; min-width: 180px; }
+      .logo h1 { font-size: 16px; }
+    }
+    .footer-hijau {
+      width: 100%;
+      background: #275a1c;
+      color: #fff;
+      font-size: 1.25em;
+      text-align: left;
+      padding: 8px 24px;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      position: fixed;
+      left: 0; right: 0; bottom: 0;
+      z-index: 10;
+      box-sizing: border-box;
+      letter-spacing: 0.2px;
+    }
+    .container {
+      max-width: 700px;
+      margin: 30px auto;
+      padding: 40px;
+      background-color: rgba(0, 0, 0, 0.7);
+      border-radius: 10px;
+      box-sizing: border-box;
+    }
+    h1 {
+      font-size: 36px;
+      margin-bottom: 20px;
+      color: white;
+    }
+    .chart {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      align-items: center;
+      margin-bottom: 40px;
+    }
+    .level {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .box {
+      background: rgba(255,255,255,0.15);
+      border-radius: 10px;
+      padding: 18px 28px;
+      min-width: 180px;
+      margin: 4px 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.09);
+      color: #fff;
+      text-align: center;
+      box-sizing: border-box;
+    }
+    .box h3 {
+      margin: 0 0 8px 0;
+      font-size: 1.1em;
+      font-weight: bold;
+    }
+    .box a {
+      display: inline-block;
+      margin-top: 8px;
+      color: #fff;
+      background: #25d366;
+      padding: 4px 14px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 0.98em;
+      transition: background 0.2s;
+    }
+    .box a:hover {
+      background: #128c7e;
+    }
+    .back-link {
+      display: inline-block;
+      margin-top: 30px;
+      color: white;
+      font-weight: bold;
+      text-decoration: none;
+    }
+    .back-link:hover {
+      text-decoration: underline;
+    }
+    .foto-aparat {
+      width: 90px !important;
+      height: 90px !important;
+      object-fit: cover;
+      border-radius: 10%;
+      border: 3px solid #fff;
+      margin-bottom: 10px;
+      background: #eee;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    @media screen and (max-width: 800px) {
+      h1 { font-size: 28px; }
+      .container { padding: 22px; }
+      .box { min-width: 140px; padding: 14px 10px; }
+    }
+    @media screen and (max-width: 600px) {
+      .container {
+        padding: 14px;
+        margin: 16px 5px;
+      }
+      h1 { font-size: 20px; }
+      .box { padding: 10px 5px; min-width: 110px; }
+      .level { gap: 10px; }
+      .foto-aparat { width: 60px !important; height: 60px !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <div class="hamburger" id="hamburger-menu" aria-label="Buka menu navigasi" tabindex="0">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+    <div class="logo">
+      <img src="gambar/logo.png" alt="Logo Desa" />
+      <h1>Desa Watubula</h1>
+      <p>Kec. Sigi Kota, Kab. Sigi, Prov. Sulawesi Tengah</p>
+    </div>
+  </div>
+  <!-- Sidebar Menu -->
+  <div class="sidebar" id="sidebar-menu">
+    <button class="close-btn" id="close-sidebar" aria-label="Tutup menu">&times;</button>
+    <ul>
+      <li><a href="index.html">Beranda</a></li>
+      <li><a href="profil.html">Profil Desa</a></li>
+      <li><a href="aparat.html">Aparat</a></li>
+      <li><a href="peta.html">Peta</a></li>
+      <li><a href="stat.html">Infografis</a></li>
+    </ul>
+  </div>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <div class="container">
+    <h1>Struktur Aparat Desa Watubula</h1>
+    <div class="chart">
+      <!-- Kepala Desa -->
+      <div class="level">
+        <div class="box">
+          <h3>Kepala Desa</h3>
+          <p>Nelson, S.AP</p>
+          <a href="https://wa.me/6281341108185">WhatsApp</a>
+        </div>
+      </div>
+      <!-- Sekretaris -->
+      <div class="level">
+        <div class="box">
+          <h3>Sekretaris</h3>
+          <p>Atvenia, S.AP</p>
+          <a href="https://wa.me/6282259757628">WhatsApp</a>
+        </div>
+      </div>
+      <!-- Kasi -->
+      <div class="level">
+        <div class="box">
+          <h3>Kasi Pemerintahan</h3>
+          <p>Aljun</p>
+        </div>
+        <div class="box">
+          <h3>Kasi Pembangunan</h3>
+          <p>Philpus</p>
+        </div>
+        <div class="box">
+          <h3>Kasi Kesra</h3>
+          <p>Jemi S.</p>
+        </div>
+      </div>
+      <!-- Kaur -->
+      <div class="level">
+        <div class="box">
+          <h3>Kaur Keuangan</h3>
+          <p>Nelshi K.</p>
+        </div>
+        <div class="box">
+          <h3>Kaur Umum</h3>
+          <p>Himel</p>
+        </div>
+        <div class="box">
+          <h3>Kaur Perencanaan</h3>
+          <p>(Kosong)</p>
+        </div>
+      </div>
+      <!-- Kadus -->
+      <div class="level">
+        <div class="box">
+          <h3>Kadus 01</h3>
+          <p>Yustinus</p>
+        </div>
+        <div class="box">
+          <h3>Kadus 02</h3>
+          <p>Yulius P.</p>
+        </div>
+        <div class="box">
+          <h3>Kadus 03</h3>
+          <p>Ansar T.</p>
+        </div>
+      </div>
+    </div>
+    <a href="Utama.html" class="back-link">← Kembali ke Beranda</a>
+  </div>
+
+  <footer class="footer-hijau">
+    &copy; 2025 Pemerintah Desa Watubula | Sumber Data: BPS & Desa Watubula
+  </footer>
+  <script>
+    // Sidebar toggle logic
+    const hamburger = document.getElementById('hamburger-menu');
+    const sidebar = document.getElementById('sidebar-menu');
+    const closeBtn = document.getElementById('close-sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+
+    function openSidebar() {
+      sidebar.classList.add('active');
+      overlay.classList.add('active');
+    }
+    function closeSidebar() {
+      sidebar.classList.remove('active');
+      overlay.classList.remove('active');
+    }
+    hamburger.addEventListener('click', openSidebar);
+    closeBtn.addEventListener('click', closeSidebar);
+    overlay.addEventListener('click', closeSidebar);
+
+    // Optional: close sidebar on ESC key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === "Escape") closeSidebar();
+    });
+  </script>
+</body>
+</html>
